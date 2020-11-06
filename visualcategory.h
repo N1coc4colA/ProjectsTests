@@ -15,6 +15,8 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *) override;
+    //bool event(QEvent *e) override;
+    bool handleSwipeGesture(SwipingGesture *gest) override;
     QVBoxLayout *m_layout = nullptr;
 
 private:

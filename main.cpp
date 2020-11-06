@@ -4,6 +4,8 @@
 #include "visualcontainer.h"
 #include "flowlayout.h"
 
+#include "ios.h"
+
 #include <QVBoxLayout>
 #include <QApplication>
 #include <QPaintEvent>
@@ -41,8 +43,8 @@ int main(int argc, char *argv[])
             { cat, cat1, cat2 }
     };
 
-    VisualCategory *visual = new VisualCategory(data);
     VisualStackElement *swipe = new VisualStackElement;
+    VisualCategory *visual = new VisualCategory(data, swipe);
     QWidget *w = new QWidget;
     w->setStyleSheet("background-color: red");
     QWidget *w2 = new QWidget;
@@ -62,11 +64,15 @@ int main(int argc, char *argv[])
     //w->setLayout(new FlowLayout);
 
     swipe->TouchInterfacing::enableEventRedirection(true);
-    swipe->show();
     swipe->addWidget(w);
     swipe->addWidget(w1);
     swipe->addWidget(w2);
     swipe->addWidget(visual);
+
+    ios::IOS::setOutputFile("/home/nicolas/Desktop/log.txt");
+    ios::IOS::output("\n______________STARTING NEW PROC INST____________\n");
+    swipe->show();
+    (new VisualCategory(data))->show();
 
     return a.exec();
 }

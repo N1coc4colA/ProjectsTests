@@ -25,7 +25,7 @@ enum SkipEvents {
 class TouchInterfacing
 {
 public:
-    TouchInterfacing(QWidget *source);
+    explicit TouchInterfacing(QWidget *source);
     virtual ~TouchInterfacing();
 
     /**
@@ -53,6 +53,8 @@ public:
      * @param events
      */
     void setBlockedEvents(int events);
+
+    void enableDebug(bool debug);
 
 protected:
     virtual bool handleSwipeGesture(SwipingGesture *gesture);

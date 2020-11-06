@@ -5,6 +5,7 @@
 #include <QPainter>
 #include <QResizeEvent>
 
+#include <QEvent>
 #include <QDebug>
 
 #include <QHBoxLayout>
@@ -58,7 +59,16 @@ VisualCategoryListElement::~VisualCategoryListElement()
     m_layout->~FlowLayout();
 }
 
-void VisualCategoryListElement::paintEvent(QPaintEvent *) {}
+bool VisualCategoryListElement::event(QEvent *event)
+{
+    return QWidget::event(event);
+}
+
+void VisualCategoryListElement::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+    painter.fillRect(this->rect(), Qt::red);
+}
 
 void VisualCategoryListElement::resizeEvent(QResizeEvent *e)
 {

@@ -42,6 +42,12 @@ public:
      */
     void check();
 
+    /**
+     * @brief Prints events data when enabled with UID of the object
+     * @param enable
+     */
+    void enableDebug(bool enable);
+
 protected:
     bool processMouseMove(QMouseEvent *e);
     bool processMousePress(QMouseEvent *e);
@@ -56,6 +62,15 @@ private:
     bool handling = true;
     bool split = false;
     bool reject = false;
+
+    bool debug = false;
+
+    int internal_id;
+    inline static int getInternalID() {
+        static int internal_identifier = 0;
+        internal_identifier++;
+        return internal_identifier;
+    }
 
     QPoint *source = nullptr;
     QWidget *m_parent = nullptr;

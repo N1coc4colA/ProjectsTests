@@ -1,7 +1,10 @@
 #include "touchsystem.h"
 #include "touchinterfacing.h"
 
+#include "ios.h"
 #include <iostream>
+
+#include <QMetaEnum>
 
 #ifndef op
 #define op(str) std::cout << str << std::endl;
@@ -11,6 +14,7 @@ bool operator != (const SkipEvents& y, const SkipEvents& x) { return !( (((x & y
 
 TouchSystem::TouchSystem(TouchInterfacing *interface) : QObject(nullptr)
 {
+    internal_id = getInternalID();
     this->interface = interface;
 }
 
@@ -46,10 +50,15 @@ void TouchSystem::enableRejectToExternHandling(bool enable)
     reject = !enable;
 }
 
+void TouchSystem::enableDebug(bool enable)
+{
+    debug = enable;
+}
+
 bool TouchSystem::eventFilter(QObject *object, QEvent *event)
 {
     check();
-    bool out = false;
+    bool out = true;
     if (!reject) {
         if (interface->skipEvents != SkipEvents::Any) {
             if (QWidget *source = qobject_cast<QWidget *>(object)) {
@@ -80,9 +89,23 @@ bool TouchSystem::eventFilter(QObject *object, QEvent *event)
                         }
                     }
                 }
+                if (debug) {
+                    ios::IOS::output("TouchSystem (");
+                    ios::IOS::output(interface->source->metaObject()->className());
+                    ios::IOS::output("): | UID: ");
+                    ios::IOS::output(QString::number(internal_id).toUtf8());
+                    ios::IOS::output(" | Event Type: ");
+                    ios::IOS::output(QString(QMetaEnum::fromType<QEvent::Type>().key(event->type())).toUtf8());
+                    ios::IOS::output(" | Watched object: ");
+                    ios::IOS::output(QString(object->metaObject()->className()).toUtf8());
+                    ios::IOS::output(" - ");
+                    ios::IOS::output(object);
+                    ios::IOS::output("\n");
+                }
             }
         }
     }
+    event->setAccepted(out);
     return out;
 }
 
@@ -152,7 +175,7 @@ bool TouchSystem::processMouseMove(QMouseEvent *e)
                         SwipingGesture *gest = new SwipingGesture;
                         memcpy((void *)gest, (void *)m_swipe, sizeof (*m_swipe));
                         val1 = interface->handleSwipeGesture(gest);
-                        gest->~SwipingGesture();
+                        //gest->deleteLater();
                     }
                 } else {
                     if (interface->skipEvents != SkipEvents::SwipeGesture) {
@@ -165,7 +188,7 @@ bool TouchSystem::processMouseMove(QMouseEvent *e)
                         SwipingGesture *gest = new SwipingGesture;
                         memcpy((void *)gest, (void *)m_swipe, sizeof (*m_swipe));
                         val1 = interface->handleSwipeGesture(gest);
-                        gest->~SwipingGesture();
+                        //gest->~SwipingGesture();
                     }
                 }
                 if (split) {
@@ -227,7 +250,21 @@ bool TouchSystem::processMouseRelease(QMouseEvent *e)
                     gest->setHotSpot(e->globalPos());
                     source->~QPoint();
                     val1 = interface->handleTapGesture(gest);
-                    gest->~QTapGesture();
+                    //gest->~QTapGesture();
+
+                    if (debug) {
+                        ios::IOS::output("TouchSystem (");
+                        ios::IOS::output(interface->source->metaObject()->className());
+                        ios::IOS::output("): | UID: ");
+                        ios::IOS::output(QString::number(internal_id).toUtf8());
+                        ios::IOS::output(" | Event Type: ");
+                        ios::IOS::output("SynthetizedTapEvent");
+                        ios::IOS::output(" | Watched object: ");
+                        ios::IOS::output(QString(interface->source->metaObject()->className()).toUtf8());
+                        ios::IOS::output(" - ");
+                        ios::IOS::output(interface->source);
+                        ios::IOS::output("\n");
+                    }
                 }
 
                 if (split) {
@@ -245,11 +282,25 @@ bool TouchSystem::processMouseRelease(QMouseEvent *e)
                     m_swipe->setGestureState(Qt::GestureState::GestureFinished);
                     SwipingGesture *tmp = new SwipingGesture;
                     memcpy((void *)tmp, (void *)m_swipe, sizeof (*m_swipe));
-                    m_swipe->~SwipingGesture();
+                    //m_swipe->~SwipingGesture();
 
                     bool val1 = false;
                     if (interface->skipEvents != SkipEvents::SwipeGesture) {
                         val1 = interface->handleSwipeGesture(tmp);
+                    }
+
+                    if (debug) {
+                        ios::IOS::output("TouchSystem (");
+                        ios::IOS::output(interface->source->metaObject()->className());
+                        ios::IOS::output("): | UID: ");
+                        ios::IOS::output(QString::number(internal_id).toUtf8());
+                        ios::IOS::output(" | Event Type: ");
+                        ios::IOS::output("SynthetizedSwipeEvent");
+                        ios::IOS::output(" | Watched object: ");
+                        ios::IOS::output(QString(interface->source->metaObject()->className()).toUtf8());
+                        ios::IOS::output(" - ");
+                        ios::IOS::output(interface->source);
+                        ios::IOS::output("\n");
                     }
 
                     if (split) {

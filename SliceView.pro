@@ -40,7 +40,9 @@ SOURCES += \
     touchinterfacing.cpp \
     swipinggesture.cpp \
     touchsystem.cpp \
-    restraintscrollarea.cpp
+    restraintscrollarea.cpp \
+    restraintscrollareabg.cpp \
+    ios.cpp
 
 HEADERS += \
     widget.h \
@@ -58,7 +60,9 @@ HEADERS += \
     touchinterfacing.h \
     swipinggesture.h \
     touchsystem.h \
-    restraintscrollarea.h
+    restraintscrollarea.h \
+    restraintscrollareabg.h \
+    ios.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

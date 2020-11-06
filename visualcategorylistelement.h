@@ -17,6 +17,7 @@ public:
 protected:
     void paintEvent(QPaintEvent *) override;
     void resizeEvent(QResizeEvent *e) override;
+    bool event(QEvent *e) override;
 
 private:
     FlowLayout *m_layout = nullptr;

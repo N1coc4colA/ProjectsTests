@@ -10,9 +10,9 @@ class VisualStackElement : public QStackedWidget, public TouchInterfacing
 public:
     explicit VisualStackElement(QWidget *parent = nullptr);
     ~VisualStackElement() override;
+    bool handleSwipeGesture(SwipingGesture *gesture) override;
 
 protected:
-    bool handleSwipeGesture(SwipingGesture *gesture) override;
     bool handleOtherEvents(QEvent *event) override;
 };
 

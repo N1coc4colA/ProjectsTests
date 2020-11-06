@@ -37,6 +37,11 @@ void TouchInterfacing::enableInternalTasks(bool enable)
     m_system->enableInternalHandling(enable);
 }
 
+void TouchInterfacing::enableDebug(bool debug)
+{
+    m_system->enableDebug(debug);
+}
+
 void TouchInterfacing::setBlockedEvents(int events)
 {
     skipEvents = events;

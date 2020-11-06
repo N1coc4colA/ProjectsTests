@@ -11,7 +11,7 @@ public:
 
 protected:
     bool handle;
-    bool handleOtherEvents(QEvent *e) override;
+    bool handleSwipeGesture(SwipingGesture *gest) override;
 };
 
 #endif // RESTRAINTSCROLLAREA_H
